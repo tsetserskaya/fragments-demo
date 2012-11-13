@@ -13,96 +13,12 @@ import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import com.kalicinscy.step1.List1Activity;
-import pl.przepisy.fragment.ifaces.FragmentChangeListener;
 
-public class MainActivity extends ListActivity implements FragmentChangeListener {
+public class MainActivity extends ListActivity {
 
     
     private FrameLayout leftFrame;
 
-    @Override
-    public void onFragmentChange(Fragment leftFragment, Fragment rightFragment, int flags) {
-        String backStackName = null;
-        boolean addToBackStack = true;
-
-        if ((flags & FragmentChangeListener.FLAG_CLEAR_BACKSTACK) != 0) {
-            getFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        }
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-
-        if (rightFragment == null) {
-            Fragment toRemove = getFragmentManager().findFragmentById(R.id.frame_right);
-            if (toRemove != null) {
-                transaction.remove(toRemove);
-            }
-        } else {
-            transaction.replace(R.id.frame_right, rightFragment);
-        }
-
-        if (leftFragment == null) {
-            Fragment toRemove = getFragmentManager().findFragmentById(R.id.frame);
-            if (toRemove != null) {
-                transaction.remove(toRemove);
-            }
-            leftFrame.setVisibility(View.GONE);
-        } else {
-            transaction.replace(R.id.frame, leftFragment);
-            backStackName = "up";
-            leftFrame.setVisibility(View.VISIBLE);
-        }
-
-        if ((flags & FragmentChangeListener.FLAG_NO_BACKSTACK) != 0) {
-            addToBackStack = false;
-        }
-
-        if (addToBackStack) {
-            transaction.addToBackStack(backStackName);
-        }
-        try {
-            transaction.commitAllowingStateLoss();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void onFragmentChange(Fragment fragment, int flags) {
-        String backStackName = null;
-        boolean addToBackStack = true;
-
-        if ((flags & FragmentChangeListener.FLAG_CLEAR_BACKSTACK) != 0) {
-            getFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        }
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        if ((flags & FragmentChangeListener.FLAG_RIGHT_FRAGMENT) != 0 && findViewById(R.id.frame_right) != null) {
-            transaction.replace(R.id.frame_right, fragment);
-        } else {
-            transaction.replace(R.id.frame, fragment);
-            backStackName = "up";
-        }
-
-        if ((flags & FragmentChangeListener.FLAG_NO_BACKSTACK) != 0) {
-            addToBackStack = false;
-        }
-
-//        if ((flags & FragmentChangeListener.FLAG_NO_BACKSTACK_ON_RIGHT) != 0 && findViewById(R.id.frame_right) != null) {
-//            addToBackStack = false;
-//        }
-
-        if (addToBackStack) {
-            transaction.addToBackStack(backStackName);
-        }
-        try {
-            transaction.commitAllowingStateLoss();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void onFragmentChange(Fragment fragment) {
-        onFragmentChange(fragment, 0);
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
